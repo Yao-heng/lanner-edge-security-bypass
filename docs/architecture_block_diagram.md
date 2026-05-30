@@ -9,24 +9,24 @@ graph TD
     classDef telemetry fill:#e65100,stroke:#f57c00,stroke-width:2px,color:#fff;
 
     %% Hardware Layers
-    subg_Host[Host Compute Subsystem]
+    subgraph Host
         CPU[Intel/AMD CPU Core<br/>Complex Schedule]:::hardware
         GPU[NVIDIA GPU / Jetson SoM<br/>Heavy Inference Burst]:::hardware
         PCIe[PCIe Gen 5/6 Bus Topology<br/>Dynamic Link Training]:::hardware
     end
 
-    subg_Lanner[Lanner Proprietary Network I/O]
+    subgraph Lanner
         NIC[Network Security Card<br/>Hardware Bypass Relay]:::hardware
     end
 
     %% Management & Security Control Tiers
-    subg_OOB[Out-of-Band Management & Automation Control]
+    subgraph OOB
         BMC[ASPEED AST2600 BMC Engine<br/>Tony's Closed-Loop AIOps Engine]:::telemetry
         RoT[Hardware Root of Trust<br/>Cryptographic Anchor / SPDM 1.2]:::security
     end
 
     %% Interconnections & Telemetry
-    CPU <=>|PCIe Gen 5 Data Pipeline| GPU
+    CPU -->|PCIe Gen 5 Data Pipeline| GPU
     CPU -.->| PE Bus Telemetry | BMC
     GPU -.->| Sub-ms Voltage Sag Telemetry | BMC
     PCIe -.->| 100μs AER Link Polling | BMC
@@ -34,4 +34,7 @@ graph TD
     BMC ==>| GPIO Pin 14 Lock Flash | RoT
     BMC ==>| GPIO Pin 23 Active Low | NIC
 
-    class BMC,RoT,NIC telemetry,security,hardware;
+    class BMC telemetry
+    class RoT security
+    class NIC hardware
+```
